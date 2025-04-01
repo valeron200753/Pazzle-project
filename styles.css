@@ -10,13 +10,16 @@ body {
     margin: auto;
     border: 2px solid black;
     overflow: hidden;
+    max-width: 90vw; /* Контейнер не перевищує 90% ширини вікна */
+    max-height: 90vh; /* Контейнер не перевищує 90% висоти вікна */
 }
 
 .puzzle-piece {
     position: absolute;
     cursor: grab;
     background-repeat: no-repeat;
-    border: 1px solid black; /* Видимі границі шматків */
+    border: 1px solid black;
+    transition: transform 0.1s;
 }
 
 .puzzle-piece:active {

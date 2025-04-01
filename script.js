@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const imageLoader = document.getElementById("imageLoader");
     let img = new Image();
     
-    let rows = 6, cols = 4; // Можна змінити на іншу кількість шматків
-    let pieces = [], pieceWidth, pieceHeight, placedPieces = 0;
-
+    let rows = 6, cols = 4; // Кількість шматків
+    let pieces = [], pieceWidth, pieceHeight, placedPieces = 0, hasStarted = false;
+    
     imageLoader.addEventListener("change", function (event) {
         const file = event.target.files[0];
         if (file) {
@@ -22,17 +22,26 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     function setupPuzzle() {
-        container.innerHTML = ""; // Очистити попередній пазл
+        container.innerHTML = ""; 
         placedPieces = 0;
         pieces = [];
+        hasStarted = false;
 
-        container.style.width = `${img.width}px`;
-        container.style.height = `${img.height}px`;
+        // Визначаємо розмір контейнера під екран
+        let screenWidth = window.innerWidth * 0.9;
+        let screenHeight = window.innerHeight * 0.9;
+        let scaleFactor = Math.min(screenWidth / img.width, screenHeight / img.height);
+
+        let puzzleWidth = img.width * scaleFactor;
+        let puzzleHeight = img.height * scaleFactor;
+
+        container.style.width = `${puzzleWidth}px`;
+        container.style.height = `${puzzleHeight}px`;
         container.style.backgroundImage = `url(${img.src})`;
-        container.style.backgroundSize = `${img.width}px ${img.height}px`;
+        container.style.backgroundSize = `${puzzleWidth}px ${puzzleHeight}px`;
         
-        pieceWidth = img.width / cols;
-        pieceHeight = img.height / rows;
+        pieceWidth = puzzleWidth / cols;
+        pieceHeight = puzzleHeight / rows;
 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
@@ -41,14 +50,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 piece.style.width = `${pieceWidth}px`;
                 piece.style.height = `${pieceHeight}px`;
                 piece.style.backgroundImage = `url(${img.src})`;
-                piece.style.backgroundSize = `${img.width}px ${img.height}px`;
+                piece.style.backgroundSize = `${puzzleWidth}px ${puzzleHeight}px`;
                 piece.style.backgroundPosition = `-${j * pieceWidth}px -${i * pieceHeight}px`;
                 piece.dataset.row = i;
                 piece.dataset.col = j;
 
-                // Випадкове розташування
-                piece.style.left = `${Math.random() * (img.width - pieceWidth)}px`;
-                piece.style.top = `${Math.random() * (img.height - pieceHeight)}px`;
+                // Випадкове розташування шматків
+                piece.style.left = `${Math.random() * (puzzleWidth - pieceWidth)}px`;
+                piece.style.top = `${Math.random() * (puzzleHeight - pieceHeight)}px`;
 
                 makeDraggable(piece);
                 container.appendChild(piece);
@@ -65,6 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
             offsetX = e.clientX - piece.offsetLeft;
             offsetY = e.clientY - piece.offsetTop;
             piece.style.zIndex = 1000;
+
+            // Прибираємо фон після першого руху
+            if (!hasStarted) {
+                container.style.backgroundImage = "none"; 
+                hasStarted = true;
+            }
         });
 
         document.addEventListener("mousemove", (e) => {
