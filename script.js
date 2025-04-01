@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let currentX = parseInt(piece.style.left);
         let currentY = parseInt(piece.style.top);
 
+
         if (Math.abs(currentX - correctX) <= tolerance && Math.abs(currentY - correctY) <= tolerance) {
             piece.style.left = `${correctX}px`;
             piece.style.top = `${correctY}px`;
