@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.querySelector(".puzzle-container");
     const pieces = [];
-    const rows = 3, cols = 3;
+    const rows = 6, cols = 4;
     let placedPieces = 0;
 
     // Створення шматків пазлу
@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
             piece.dataset.row = i;
             piece.dataset.col = j;
 
-            // Випадкове розміщення шматка
-            piece.style.left = `${Math.random() * 200}px`;
-            piece.style.top = `${Math.random() * 200}px`;
+            // Випадкове розташування
+            piece.style.left = `${Math.random() * 300}px`;
+            piece.style.top = `${Math.random() * 500}px`;
 
             makeDraggable(piece);
             container.appendChild(piece);
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (Math.abs(currentX - correctX) <= tolerance && Math.abs(currentY - correctY) <= tolerance) {
             piece.style.left = `${correctX}px`;
             piece.style.top = `${correctY}px`;
-            piece.style.pointerEvents = "none"; // Блокування переміщення правильно встановленого шматка
+            piece.style.pointerEvents = "none";
             placedPieces++;
 
             if (placedPieces === rows * cols) {
